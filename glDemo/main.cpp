@@ -26,9 +26,18 @@ bool dPressed = false;
 
 // Function prototypes
 void renderScene();
+
+// Rendering function prototypes
+void drawShadedTriangle();
+void drawStarOutline();
+void drawStarShaded();
+void drawTank();
+void drawSemiCircleStudio();
+
 void resizeWindow(GLFWwindow* window, int width, int height);
 void keyboardHandler(GLFWwindow* window, int key, int scancode, int action, int mods);
 void updateScene();
+
 
 
 int main() {
@@ -75,13 +84,12 @@ int main() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // setup background colour to be black
 
 	// *** setup viewplane to the appropriate size
-	gluOrtho2D(-8.0f, 8.0f, -8.0f, 8.0f);
+	gluOrtho2D(-1.1f, 1.1f, -1.1f, 1.1f);
 
 	//
 	// 2. Main loop
 	// 
 	
-
 	// Loop while program is not terminated.
 	while (!glfwWindowShouldClose(window)) {
 
@@ -101,6 +109,7 @@ int main() {
 
 
 
+
 // renderScene - function to render the current scene
 void renderScene()
 {
@@ -108,43 +117,166 @@ void renderScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Render objects here...
+	//drawShadedTriangle();
+	//drawStarOutline();
+	//drawStarShaded();
+	//drawTank();
+	drawSemiCircleStudio();
+}
 
-	// *** triangle of the original size
-	/*glBegin(GL_TRIANGLES);
+// Rendering functions
 
-	glVertex2f(-0.5f, -0.5f);
-	glVertex2f(0.0f, 0.5f);
-	glVertex2f(0.5f, -0.5f);
+void drawShadedTriangle() {
 
-	glEnd();*/
-
-	// *** square from 2 triangles
-	/*glBegin(GL_TRIANGLES);
-
-	glVertex2f(-0.5f, -0.5f);
-	glVertex2f(-0.5f, 0.5f);
-	glVertex2f(0.5f, 0.5f);
-
-	glVertex2f(0.5f, 0.5f);
-	glVertex2f(0.5f, -0.5f);
-	glVertex2f(-0.5f, -0.5f);
-	
-	glEnd();*/
-
-
-	// *** an extra - adding a moveable triangle
-	// Note: This is using an offset (x, y) to represent where the object is in the scene.
-	// There are 2 fundamental things to address here: 
-	// 1) This is a basic example of translation - when we introduce transformations, we'll look at doing this more effectively with matrices
-	// 2) Anything we animate needs to be based on time elapsed.  This code is not (it's only a basic intro :)  We'll look at timing for animation later!
 	glBegin(GL_TRIANGLES);
 
-	glVertex2f(x + -0.5f, y + -0.5f);
-	glVertex2f(x + 0.0f, y + 0.5f);
-	glVertex2f(x + 0.5f, y + -0.5f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(-0.5f, -0.5f);
+	
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex2f(0.0f, 0.5f);
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex2f(0.5f, -0.5f);
+
+	glEnd();
+}
+
+void drawStarOutline() {
+
+	glBegin(GL_LINE_LOOP);
+
+	glColor3ub(255, 255, 255);
+	glVertex2f(0.0, 0.25f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.1f, 0.1f);
+
+	glColor3ub(255, 0, 255);
+	glVertex2f(0.25f, 0.08f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(0.15f, -0.05f);
+
+	glColor3ub(0, 255, 255);
+	glVertex2f(0.25f, -0.25f);
+
+	glColor3ub(0, 255, 255);
+	glVertex2f(0.0f, -0.125f);
+
+	glColor3ub(231, 170, 25);
+	glVertex2f(-0.25f, -0.25f);
+
+	glColor3ub(128, 200, 0);
+	glVertex2f(-0.15f, -0.05f);
+
+	glColor3ub(0, 255, 255);
+	glVertex2f(-0.25f, 0.08f);
+
+	glColor3ub(200, 90, 221);
+	glVertex2f(-0.1f, 0.1f);
+
+	glEnd();
+}
+
+void drawStarShaded() {
+
+	glBegin(GL_TRIANGLE_FAN);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.0f, 0.0f); // Centre vertex
+
+	glColor3ub(0, 0, 0);
+	glVertex2f(0.0, 0.25f); // First boundary vertex
+	glVertex2f(0.1f, 0.1f);
+	glVertex2f(0.25f, 0.08f);
+	glVertex2f(0.15f, -0.05f);
+	glVertex2f(0.25f, -0.25f);
+	glVertex2f(0.0f, -0.125f);
+	glVertex2f(-0.25f, -0.25f);
+	glVertex2f(-0.15f, -0.05f);
+	glVertex2f(-0.25f, 0.08f);
+	glVertex2f(-0.1f, 0.1f);
+	glVertex2f(0.0, 0.25f); // Repeat of first boundary vertex to close the loop
+
+	glEnd();
+}
+
+void drawTank() {
+
+	// Render body
+	glBegin(GL_LINE_LOOP);
+
+	glColor3ub(0, 255, 0); // just set colour once as all vertices will keep this unless changed
+	glVertex2f(-0.75f, 0.4f);
+	glVertex2f(0.75f, 0.4f);
+	glVertex2f(0.75f, -0.4f);
+	glVertex2f(-0.75f, -0.4f);
 
 	glEnd();
 
+	// Render gun
+	glBegin(GL_LINE_LOOP);
+
+	glColor3ub(255, 0, 0); // just set colour once as all vertices will keep this unless changed
+	glVertex2f(-0.5f, 0.3f);
+	glVertex2f(0.5f, 0.0f);
+	glVertex2f(-0.5f, -0.3f);
+
+	glEnd();
+}
+
+
+// Draw a semi-circle with smooth shading, with red vertices on the inner edge and yellow vertices on the outer edge.
+void drawSemiCircleStudio() {
+
+	glShadeModel(GL_SMOOTH);
+
+	glBegin(GL_TRIANGLE_STRIP);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(-0.25f, 0.0f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(-0.75f, 0.0f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(-0.216506351f, 0.125f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(-0.649519053f, 0.375f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(-0.125, 0.216506351f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(-0.375f, 0.649519053f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(0.0f, 0.25f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.0f, 0.75f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(0.125f, 0.216506351f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.375f, 0.649519053f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(0.216506351f, 0.125f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.649519053f, 0.375f);
+
+	glColor3ub(255, 0, 0);
+	glVertex2f(0.25f, 0.0f);
+
+	glColor3ub(255, 255, 0);
+	glVertex2f(0.75f, 0.0f);
+
+	glEnd();
 }
 
 
@@ -153,7 +285,6 @@ void resizeWindow(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);		// Draw into entire window
 }
-
 
 // Function to call to handle keyboard input
 void keyboardHandler(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -167,22 +298,6 @@ void keyboardHandler(GLFWwindow* window, int key, int scancode, int action, int 
 				glfwSetWindowShouldClose(window, true);
 				break;
 
-			case GLFW_KEY_W:
-				wPressed = true;
-				break;
-
-			case GLFW_KEY_S:
-				sPressed = true;
-				break;
-
-			case GLFW_KEY_A:
-				aPressed = true;
-				break;
-
-			case GLFW_KEY_D:
-				dPressed = true;
-				break;
-
 			default:
 			{
 			}
@@ -190,51 +305,11 @@ void keyboardHandler(GLFWwindow* window, int key, int scancode, int action, int 
 	}
 	else if (action == GLFW_RELEASE) {
 		// handle key release events
-
-		// check which key was released...
-		switch (key)
-		{
-			case GLFW_KEY_W:
-				wPressed = false;
-				break;
-
-			case GLFW_KEY_S:
-				sPressed = false;
-				break;
-
-			case GLFW_KEY_A:
-				aPressed = false;
-				break;
-
-			case GLFW_KEY_D:
-				dPressed = false;
-				break;
-
-			default:
-				{
-				}
-		}
 	}
 }
 
 
 // Function called to animate elements in the scene
 void updateScene() {
-
-	if (wPressed) {
-		y += movementSpeed;
-	}
-
-	if (sPressed) {
-		y -= movementSpeed;
-	}
-
-	if (aPressed) {
-		x -= movementSpeed;
-	}
-
-	if (dPressed) {
-		x += movementSpeed;
-	}
 }
 
