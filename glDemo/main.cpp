@@ -1,8 +1,19 @@
 
 #include "core.h"
+using namespace std;
 
 
 // global variables
+
+mt19937 engine;
+uniform_real_distribution<float> range;
+
+mt19937 engine2;
+uniform_real_distribution<float> range2;
+
+vector<glm::vec2> vertexCoords;
+vector<glm::vec4> colourCodes;
+vector<float> sizeValue;
 
 // Window size
 const unsigned int initWidth = 512;
@@ -33,6 +44,9 @@ void drawStarOutline();
 void drawStarShaded();
 void drawTank();
 void drawSemiCircleStudio();
+void randomPoints();
+void edgedRectangles();
+void blendingBoxes();
 
 void resizeWindow(GLFWwindow* window, int width, int height);
 void keyboardHandler(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -86,6 +100,41 @@ int main() {
 	// *** setup viewplane to the appropriate size
 	gluOrtho2D(-1.1f, 1.1f, -1.1f, 1.1f);
 
+
+	random_device rd;
+	engine = mt19937(rd());
+	range = uniform_real_distribution<float>(-1.0f, 1.0f);
+
+	random_device dr;
+	engine2 = mt19937(dr());
+	range2 = uniform_real_distribution<float>(-1.0f, 20.0f);
+
+	// Create a openGL vec2 vector object containing 100 elements all initialised to 0.0
+	vertexCoords = vector<glm::vec2>(100, glm::vec2(0.0f, 0.0f));
+	colourCodes = vector<glm::vec4>(100, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+	sizeValue = vector<float>(100, 0.0f);
+
+
+	// Iterate 100 times (once for each vertex) and calculate and store the random x and y values
+	for (int i = 0; i < 100; i++) {
+
+		float x = range(engine);
+		float y = range(engine);
+
+		vertexCoords[i] = glm::vec2(x, y);
+
+		float r = range(engine);
+		float g = range(engine);
+		float b = range(engine);
+		float a = range(engine);
+
+		colourCodes[i] = glm::vec4(r, g, b, a);
+
+		float s = range2(engine2);
+		sizeValue[i] = s;
+	}
+
+
 	//
 	// 2. Main loop
 	// 
@@ -111,20 +160,105 @@ int main() {
 
 
 // renderScene - function to render the current scene
+
 void renderScene()
 {
 	// Clear the rendering window
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Render objects here...
-	//drawShadedTriangle();
-	//drawStarOutline();
-	//drawStarShaded();
-	//drawTank();
-	drawSemiCircleStudio();
+	//randomPoints();
+	edgedRectangles();
+	//blendingBoxes();
 }
 
+
+
 // Rendering functions
+
+void blendingBoxes() 
+{
+	glBegin(GL_QUADS);
+
+	glEnd();
+}
+
+void edgedRectangles() 
+{
+	glLineWidth(5.0f);
+	glBegin(GL_LINES);
+
+	
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex2f(-0.5f, -0.5f);
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glVertex2f(0.5f, -0.5f);
+
+	glEnd();
+
+	////////////////////////////
+
+	glLineWidth(10.0f);
+	glBegin(GL_LINES);
+
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex2f(0.5f, 0.5f);
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex2f(-0.5f, 0.5f);
+
+	glEnd();
+
+	////////////////////////////
+
+	glLineWidth(20.0f);
+	glBegin(GL_LINES);
+
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex2f(-0.5f, -0.5f);
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glVertex2f(-0.5f, 0.5f);
+
+	glEnd();
+
+	////////////////////////////
+
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex2f(0.5f, -0.5f);
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex2f(0.5f, 0.5f);
+
+	glEnd();
+}
+
+void randomPoints() 
+{	
+	for (int i = 0; i < 100; i++) {
+
+		glPointSize(sizeValue[i]);
+		glColor4f(colourCodes[i].r, colourCodes[i].g, colourCodes[i].b, colourCodes[i].a);
+	}
+
+
+	glBegin(GL_POINTS);
+
+	// Render objects here...
+	for (int i = 0; i < 100; i++) {
+
+		glVertex2f(vertexCoords[i].x, vertexCoords[i].y);
+	}
+
+	glEnd();
+}
+
 
 void drawShadedTriangle() {
 
